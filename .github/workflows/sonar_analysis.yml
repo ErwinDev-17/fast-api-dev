@@ -27,6 +27,8 @@ jobs:
 
       - run: npm test
 
+      - run: npm jest 
+
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@master
         env:
