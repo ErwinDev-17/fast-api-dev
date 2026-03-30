@@ -36,5 +36,5 @@ jobs:
           args: >
             -Dsonar.projectKey=fast-api-dev
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-            -Dsonar.exclusions=k6/*, test/*
+            -Dsonar.exclusions=k6/*,test/*
             -Dsonar.qualitygate.wait=true
