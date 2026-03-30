@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Clonacion del Repositorio
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -27,7 +28,7 @@ jobs:
 
       - run: npm test --coverage
 
-      - name: SonarQube Scan
+      - name: SonarQube Scaneo
         uses: SonarSource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -35,5 +36,4 @@ jobs:
         with:
           args: >
             -Dsonar.projectKey=fast-api-dev
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
             -Dsonar.qualitygate.wait=true
