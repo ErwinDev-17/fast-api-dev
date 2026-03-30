@@ -30,5 +30,12 @@ describe('Suite de Pruebas de Calidad de Software', () => {
       expect(response.body[0]).toHaveProperty('id')
       expect(response.body[0]).toHaveProperty('stock')
     })
+
+    test('GET /metrics debe responder correctamente', async () => {
+      const res = await request(app).get('/metrics')
+
+      expect(res.statusCode).toBe(200)
+      expect(res.headers['content-type']).toMatch(/text\/plain/)
+    })
   })
 })

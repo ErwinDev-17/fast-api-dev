@@ -4,10 +4,25 @@ import { defineConfig } from 'eslint/config'
 
 export default defineConfig([
   {
-    files: ['**/*.{js,mjs,cjs}'],
-    plugins: { js },
-    extends: ['js/recommended'],
-    languageOptions: { globals: globals.node }
+    ignores: ['eslint.config.mjs', 'node_modules', 'k6/**']
   },
-  { files: ['**/*.js'], languageOptions: { sourceType: 'script' } }
+  js.configs.recommended,
+  {
+    languageOptions: {
+      globals: globals.node,
+      ecmaVersion: 'latest',
+      sourceType: 'commonjs'
+    },
+    rules: {}
+  }
 ])
+
+// export default defineConfig([
+//   {
+//     files: ['**/*.{js,mjs,cjs}'],
+//     plugins: { js },
+//     extends: ['js/recommended'],
+//     languageOptions: { globals: globals.node }
+//   },
+//   { files: ['**/*.js'], languageOptions: { sourceType: 'script' } }
+// ])

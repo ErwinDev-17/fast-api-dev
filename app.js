@@ -50,7 +50,6 @@ if (!isTest) {
   }, 5000)
 }
 
-
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
 app.use('/items', itemsRouter)
