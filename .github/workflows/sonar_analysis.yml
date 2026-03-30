@@ -1,12 +1,11 @@
 name: CI Pipeline - Análisis SAST con SonarQube
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_run:
+    workflows:
+      - "CI - Node.js"
+    types:
+      - completed
 
 jobs:
   sonarQube-analysis:
