@@ -1,24 +1,31 @@
 name: CI Pipeline - Análisis SAST con SonarQube
 
 on:
-  workflow_run:
-    workflows:
-      - "CI - Node.js"
-    types:
-      - completed
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  sonarQube-analysis:
-    name: Análisis de Calidad de Código
+  build-test-sonar:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clonación del repositorio (Checkout)
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 # Requerido por SonarQube para un análisis histórico completo
+      - uses: actions/checkout@v4
 
-      - name: Ejecución de Escáner SonarQube
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - run: npm ci
+
+      - run: npm test
+
+      - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -26,4 +33,5 @@ jobs:
         with:
           args: >
             -Dsonar.projectKey=fast-api-dev
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
             -Dsonar.qualitygate.wait=true
