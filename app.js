@@ -10,7 +10,6 @@ var metricsRouter = require('./src/routes/metrics')
 
 var app = express()
 
-app.use(metricsMiddleware)
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
