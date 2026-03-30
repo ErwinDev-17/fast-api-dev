@@ -39,10 +39,17 @@ app.use((req, res, next) => {
   next()
 })
 
-setInterval(() => {
-  const simulatedUsers = Math.floor(Math.random() * 100)
-  activeUsersGauge.set(simulatedUsers)
-}, 5000)
+const isTest = process.env.NODE_ENV === 'test'
+
+if (!isTest) {
+  client.collectDefaultMetrics()
+
+  setInterval(() => {
+    const simulatedUsers = Math.floor(Math.random() * 100)
+    activeUsersGauge.set(simulatedUsers)
+  }, 5000)
+}
+
 
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
