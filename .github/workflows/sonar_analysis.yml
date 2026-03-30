@@ -25,9 +25,7 @@ jobs:
 
       - run: npm ci
 
-      - run: npm test
-
-      - run: npm jest 
+      - run: npm test --coverage
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@master
