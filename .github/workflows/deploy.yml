@@ -66,11 +66,49 @@ jobs:
           proxy_port: 22
           script: |
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker stop fast-api-dev || true
-            docker rm fast-api-dev || true
+
+            echo "==== BLUE/GREEN DEPLOY ===="
+
+            # Leer estado
+            CURRENT=$(cat /etc/nginx/current_deploy.env | cut -d'=' -f2)
+
+            echo "Estado actual: $CURRENT"
+
+            # Lógica de inversión
+            if [ "$CURRENT" == "blue" ]; then
+              TARGET="green"
+              PORT=3004
+            else
+              TARGET="blue"
+              PORT=3001
+            fi
+
+            echo "Nuevo entorno: $TARGET ($PORT)"
+
+            # Descargar imagen
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:main
+
+            # Ejecutar contenedor
+            docker rm -f app_$TARGET || true
+
             docker run -d \
-              --name fast-api-dev \
-              -p 3001:3001 \
+              -p $PORT:3001 \
+              --name app_$TARGET \
               --restart always \
               ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:main
+
+            # envsubst
+            export COLOR=$TARGET
+            export PORT=$PORT
+
+            envsubst < /etc/nginx/templates/nginx.conf.app.template > /etc/nginx/environments/bg/nginx_$TARGET.conf
+
+            # Cambiar tráfico
+            ln -sf /etc/nginx/environments/bg/nginx_$TARGET.conf /etc/nginx/conf.d/default.conf
+
+            nginx -t && systemctl reload nginx
+
+            # Actualizar estado
+            echo "CURRENT=$TARGET" > /etc/nginx/current_deploy.env
+
+            echo "Deploy completado en $TARGET"
