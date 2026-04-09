@@ -67,7 +67,7 @@ jobs:
           script: |
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-            echo "==== BLUE/GREEN DEPLOY ===="
+            echo "BLUE/GREEN DEPLOY"
 
             # Leer estado
             CURRENT=$(cat /etc/nginx/current_deploy.env | cut -d'=' -f2)
