@@ -67,7 +67,7 @@ jobs:
           script: |
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-            echo "BLUE/GREEN DEPLOY v2"
+            echo "BLUE/GREEN DEPLOY"
 
             # Leer estado
             CURRENT=$(cat /etc/nginx/current_deploy.env | cut -d'=' -f2)
@@ -88,7 +88,7 @@ jobs:
             # Descargar imagen
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:main
 
-            docker rm -f fast-api-$TARGET || true
+            docker rm -f fast-api-dev-$TARGET || true
 
             docker run -d \
               -p $PORT:3001 \
