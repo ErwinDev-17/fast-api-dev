@@ -23,11 +23,7 @@ const activeUsersGauge = new client.Gauge({
 router.use((req, res, next) => {
   res.on('finish', () => {
     httpRequestCounter
-      .labels(
-        req.method,
-        req.route ? req.route.path : req.path,
-        res.statusCode
-      )
+      .labels(req.method, req.route ? req.route.path : req.path, res.statusCode)
       .inc()
   })
   next()
