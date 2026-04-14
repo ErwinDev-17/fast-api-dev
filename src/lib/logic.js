@@ -3,4 +3,4 @@ const calculateValue = (price, stock) => {
   return price * stock
 }
 
-module.exports = { calculateValue }
+module.exports = { calculateValue 
